@@ -232,7 +232,7 @@ public class HelloController {
             return;
         }
         if (!isValidDate(searchDate)) {
-            showAlert("Ошибка", "Неверный формат даты! Используйте формат yyyy-MM-dd");
+            showAlert("Ошибка", "Не верный формат даты формат yyyy-MM-dd");
             return;
         }
         File jsonFile = new File(dataFolder + File.separator + searchDate + ".json");
