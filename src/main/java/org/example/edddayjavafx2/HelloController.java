@@ -149,9 +149,11 @@ public class HelloController {
         if (jsonFile.exists()) {
             jsonFile.delete();
         }
-
+        deletePhotosFolderForDate(date);
+    }
+    private void deletePhotosFolderForDate(String date) {
         File photoFolder = new File(dataFolder + File.separator + "photos" + File.separator + date);
-        if (photoFolder.exists()) {
+        if (photoFolder.exists() && photoFolder.isDirectory()) {
             File[] files = photoFolder.listFiles();
             if (files != null) {
                 for (File file : files) {
@@ -159,6 +161,7 @@ public class HelloController {
                 }
             }
             photoFolder.delete();
+            System.out.println("Удалена папка с фото" + date);
         }
     }
 
@@ -232,8 +235,7 @@ public class HelloController {
             Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
             confirm.setTitle("Удалние");
             confirm.setHeaderText("Удалить день" + date);
-            confirm.setContentText("Все данные будут удален");
-
+            confirm.setContentText("Все данные будут удалены");
             ButtonType result = confirm.showAndWait().orElse(ButtonType.CANCEL);
 
             if (result == ButtonType.OK) {
@@ -290,10 +292,9 @@ public class HelloController {
             dateToUse = LocalDate.now().format(dateFormatter);
         }
         File[] photos = loadPhotosForDate(dateToUse);
-
         if (photos != null && photos.length > 0 && Galery != null) {
             try {
-                Image image = new Image(photos[0].toURI().toString());
+                Image image = new Image("file:" + photos[0].getAbsolutePath());
                 Galery.setImage(image);
             } catch (Exception e) {
                 Galery.setImage(null);
@@ -304,7 +305,6 @@ public class HelloController {
         File photoFolder = new File(dataFolder + File.separator + "photos" + File.separator + date);
         if (photoFolder.exists() && photoFolder.isDirectory()) {
             return photoFolder.listFiles(new FilenameFilter() {
-
                 public boolean accept(File dir, String name) {
                     String lower = name.toLowerCase();
                     return lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png") || lower.endsWith(".gif");
@@ -334,13 +334,13 @@ public class HelloController {
         }
         String currentUrl = currentImage.getUrl();
         for (int i = 0; i < photos.length; i++) {
-            if (photos[i].toURI().toString().equals(currentUrl)) {
+            String fileUrl = "file:" + photos[i].getAbsolutePath();
+            if (fileUrl.equals(currentUrl)) {
                 return i;
             }
         }
         return 0;
     }
-    // Методы кнопок
     @FXML
     public void BackPhoto(ActionEvent actionEvent) {
         File[] photos = getCurrentPhotos();
@@ -353,29 +353,26 @@ public class HelloController {
             }
             if (currentIndex >= 0 && currentIndex < photos.length && Galery != null) {
                 try {
-                    Image image = new Image(photos[currentIndex].toURI().toString());
+                    Image image = new Image("file:" + photos[currentIndex].getAbsolutePath());
                     Galery.setImage(image);
                 } catch (Exception e) {
                 }
             }
         }
     }
-
     @FXML
     public void Forward(ActionEvent actionEvent) {
         File[] photos = getCurrentPhotos();
         Image currentImage = getCurrentImage();
         int currentIndex = findCurrentImageIndex(photos, currentImage);
-
         if (photos != null && photos.length > 0) {
             currentIndex++;
             if (currentIndex >= photos.length) {
                 currentIndex = 0;
             }
-
             if (currentIndex >= 0 && currentIndex < photos.length && Galery != null) {
                 try {
-                    Image image = new Image(photos[currentIndex].toURI().toString());
+                    Image image = new Image("file:" + photos[currentIndex].getAbsolutePath());
                     Galery.setImage(image);
                 } catch (Exception e) {
                 }
@@ -391,7 +388,6 @@ public class HelloController {
             showAlert("Информация", "Нет фоток ");
         }
     }
-
     @FXML
     public void Download(ActionEvent actionEvent) {
         String currentDate;
@@ -400,7 +396,6 @@ public class HelloController {
         } else {
             currentDate = LocalDate.now().format(dateFormatter);
         }
-
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Выберите фото");
         fileChooser.getExtensionFilters().add(
@@ -426,7 +421,7 @@ public class HelloController {
                 in.close();
                 out.close();
                 if (Galery != null) {
-                    Image image = new Image(destFile.toURI().toString());
+                    Image image = new Image("file:" + destFile.getAbsolutePath());
                     Galery.setImage(image);
                 }
                 showAlert("ура", "Фото загружено для " + currentDate);
