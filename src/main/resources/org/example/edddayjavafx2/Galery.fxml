@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.edddayjavafx2.HelloController">
+   <children>
+      <ImageView fx:id="Galery" fitHeight="362.0" fitWidth="602.0" pickOnBounds="true" preserveRatio="true" />
+      <Button fx:id="backphoto" layoutX="453.0" layoutY="362.0" mnemonicParsing="false" onAction="#BackPhoto" prefHeight="38.0" prefWidth="76.0" text="Назад">
+         <font>
+            <Font name="Arial Black" size="13.0" />
+         </font>
+      </Button>
+      <Button fx:id="forward" layoutX="529.0" layoutY="362.0" mnemonicParsing="false" onAction="#Forward" prefHeight="38.0" prefWidth="76.0" text="Вперёд">
+         <font>
+            <Font name="Arial Black" size="14.0" />
+         </font>
+      </Button>
+      <Button fx:id="save1" layoutX="319.0" layoutY="362.0" mnemonicParsing="false" onAction="#Save1" prefHeight="38.0" prefWidth="76.0" text="Сохранить">
+         <font>
+            <Font name="Arial Black" size="10.0" />
+         </font>
+      </Button>
+      <Button fx:id="download" layoutX="243.0" layoutY="362.0" mnemonicParsing="false" onAction="#Download" prefHeight="38.0" prefWidth="76.0" text="Загрузить">
+         <font>
+            <Font name="Arial Black" size="10.0" />
+         </font>
+      </Button>
+      <Button fx:id="bakc1" layoutY="362.0" mnemonicParsing="false" onAction="#bakc1" prefHeight="38.0" prefWidth="76.0" text="к дню">
+         <font>
+            <Font name="Arial Black" size="16.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

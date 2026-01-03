@@ -7,11 +7,13 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -20,13 +22,15 @@ public class HelloController {
     private TextField addText;
     @FXML
     private TabPane tabPane;
-
     @FXML
     private TextArea textAr;
+    @FXML
+    private ImageView Galery;
 
     private String dataFolder = "data";
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static String dateToOpen = null;
+    private static String galleryDateToLoad = null;
 
     // Вспомогательные методы
     private void showAlert(String title, String message) {
@@ -145,12 +149,24 @@ public class HelloController {
         if (jsonFile.exists()) {
             jsonFile.delete();
         }
+
+        File photoFolder = new File(dataFolder + File.separator + "photos" + File.separator + date);
+        if (photoFolder.exists()) {
+            File[] files = photoFolder.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    file.delete();
+                }
+            }
+            photoFolder.delete();
+        }
     }
 
     // Основные методы
     @FXML
     public void initialize() {
         new File(dataFolder).mkdir();
+        new File(dataFolder + File.separator + "photos").mkdir();
         loadAllTabs();
     }
 
@@ -174,6 +190,15 @@ public class HelloController {
 
     @FXML
     public void Photo(ActionEvent actionEvent) {
+        if (tabPane != null) {
+            Tab currentTab = tabPane.getSelectionModel().getSelectedItem();
+            if (currentTab != null) {
+                galleryDateToLoad = currentTab.getText();
+                switchScene("Galery.fxml", actionEvent);
+            } else {
+                showAlert("Ошибка", "Сначала выберите день");
+            }
+        }
     }
 
     @FXML
@@ -255,5 +280,174 @@ public class HelloController {
             }
         }
         createTab(date);
+    }
+    @FXML
+    public void initializeGalery() {
+        String dateToUse;
+        if (galleryDateToLoad != null) {
+            dateToUse = galleryDateToLoad;
+        } else {
+            dateToUse = LocalDate.now().format(dateFormatter);
+        }
+        File[] photos = loadPhotosForDate(dateToUse);
+
+        if (photos != null && photos.length > 0 && Galery != null) {
+            try {
+                Image image = new Image(photos[0].toURI().toString());
+                Galery.setImage(image);
+            } catch (Exception e) {
+                Galery.setImage(null);
+            }
+        }
+    }
+    private File[] loadPhotosForDate(String date) {
+        File photoFolder = new File(dataFolder + File.separator + "photos" + File.separator + date);
+        if (photoFolder.exists() && photoFolder.isDirectory()) {
+            return photoFolder.listFiles(new FilenameFilter() {
+
+                public boolean accept(File dir, String name) {
+                    String lower = name.toLowerCase();
+                    return lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png") || lower.endsWith(".gif");
+                }
+            });
+        }
+        return new File[0];
+    }
+    private File[] getCurrentPhotos() {
+        String dateToUse;
+        if (galleryDateToLoad != null) {
+            dateToUse = galleryDateToLoad;
+        } else {
+            dateToUse = LocalDate.now().format(dateFormatter);
+        }
+        return loadPhotosForDate(dateToUse);
+    }
+    private Image getCurrentImage() {
+        if (Galery != null) {
+            return Galery.getImage();
+        }
+        return null;
+    }
+    private int findCurrentImageIndex(File[] photos, Image currentImage) {
+        if (currentImage == null || photos == null || photos.length == 0) {
+            return 0;
+        }
+        String currentUrl = currentImage.getUrl();
+        for (int i = 0; i < photos.length; i++) {
+            if (photos[i].toURI().toString().equals(currentUrl)) {
+                return i;
+            }
+        }
+        return 0;
+    }
+    // Методы кнопок
+    @FXML
+    public void BackPhoto(ActionEvent actionEvent) {
+        File[] photos = getCurrentPhotos();
+        Image currentImage = getCurrentImage();
+        int currentIndex = findCurrentImageIndex(photos, currentImage);
+        if (photos != null && photos.length > 0) {
+            currentIndex--;
+            if (currentIndex < 0) {
+                currentIndex = photos.length - 1;
+            }
+            if (currentIndex >= 0 && currentIndex < photos.length && Galery != null) {
+                try {
+                    Image image = new Image(photos[currentIndex].toURI().toString());
+                    Galery.setImage(image);
+                } catch (Exception e) {
+                }
+            }
+        }
+    }
+
+    @FXML
+    public void Forward(ActionEvent actionEvent) {
+        File[] photos = getCurrentPhotos();
+        Image currentImage = getCurrentImage();
+        int currentIndex = findCurrentImageIndex(photos, currentImage);
+
+        if (photos != null && photos.length > 0) {
+            currentIndex++;
+            if (currentIndex >= photos.length) {
+                currentIndex = 0;
+            }
+
+            if (currentIndex >= 0 && currentIndex < photos.length && Galery != null) {
+                try {
+                    Image image = new Image(photos[currentIndex].toURI().toString());
+                    Galery.setImage(image);
+                } catch (Exception e) {
+                }
+            }
+        }
+    }
+    @FXML
+    public void Save1(ActionEvent actionEvent) {
+        File[] photos = getCurrentPhotos();
+        if (photos != null && photos.length > 0) {
+            showAlert("Информация", " фоток " + photos.length);
+        } else {
+            showAlert("Информация", "Нет фоток ");
+        }
+    }
+
+    @FXML
+    public void Download(ActionEvent actionEvent) {
+        String currentDate;
+        if (galleryDateToLoad != null) {
+            currentDate = galleryDateToLoad;
+        } else {
+            currentDate = LocalDate.now().format(dateFormatter);
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Выберите фото");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Картинки", "*.jpg", "*.jpeg", "*.png", "*.gif")
+        );
+
+        File selectedFile = fileChooser.showOpenDialog(null);
+        if (selectedFile != null) {
+            try {
+                File dateFolder = new File(dataFolder + File.separator + "photos" + File.separator + currentDate);
+                if (!dateFolder.exists()) {
+                    dateFolder.mkdirs();
+                }
+                String fileName = "photo_" + System.currentTimeMillis() + getFileExtension(selectedFile.getName());
+                File destFile = new File(dateFolder, fileName);
+                FileInputStream in = new FileInputStream(selectedFile);
+                FileOutputStream out = new FileOutputStream(destFile);
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = in.read(buffer)) > 0) {
+                    out.write(buffer, 0, length);
+                }
+                in.close();
+                out.close();
+                if (Galery != null) {
+                    Image image = new Image(destFile.toURI().toString());
+                    Galery.setImage(image);
+                }
+                showAlert("ура", "Фото загружено для " + currentDate);
+
+            } catch (Exception e) {
+                showAlert("Ошибка", "Не удалось загрузить фото");
+            }
+        }
+    }
+    private String getFileExtension(String fileName) {
+        int dotIndex = fileName.lastIndexOf('.');
+        if (dotIndex > 0 && dotIndex < fileName.length() - 1) {
+            return fileName.substring(dotIndex);
+        }
+        return ".jpg";
+    }
+    @FXML
+    public void bakc1(ActionEvent actionEvent) {
+        if (galleryDateToLoad != null) {
+            dateToOpen = galleryDateToLoad;
+        }
+        switchScene("AllDates.fxml", actionEvent);
     }
 }
