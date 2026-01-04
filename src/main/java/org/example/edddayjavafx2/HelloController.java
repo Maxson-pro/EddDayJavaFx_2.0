@@ -32,7 +32,6 @@ public class HelloController {
     private static String dateToOpen = null;
     private static String galleryDateToLoad = null;
 
-    // Вспомогательные методы
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -76,7 +75,6 @@ public class HelloController {
                     if (file.isFile() && file.getName().endsWith(".json")) {
                         String fileName = file.getName();
                         String date = fileName.substring(0, fileName.length() - 5);
-
                         if (isValidDate(date)) {
                             String today = LocalDate.now().format(dateFormatter);
                             if (!date.equals(today)) {
@@ -124,11 +122,9 @@ public class HelloController {
         AnchorPane pane = new AnchorPane();
         pane.getChildren().add(textArea);
         newTab.setContent(pane);
-        newTab.setOnSelectionChanged(new javafx.event.EventHandler<javafx.event.Event>() {
-            public void handle(javafx.event.Event event) {
-                if (newTab.isSelected()) {
-                    textAr = textArea;
-                }
+        newTab.setOnSelectionChanged(event -> {
+            if (newTab.isSelected()) {
+                textAr = textArea;
             }
         });
         tabPane.getTabs().add(newTab);
@@ -149,23 +145,22 @@ public class HelloController {
         if (jsonFile.exists()) {
             jsonFile.delete();
         }
-        deletePhotosFolderForDate(date);
+        deletePhotosForDate(date);
     }
-    private void deletePhotosFolderForDate(String date) {
-        File photoFolder = new File(dataFolder + File.separator + "photos" + File.separator + date);
-        if (photoFolder.exists() && photoFolder.isDirectory()) {
-            File[] files = photoFolder.listFiles();
+
+    private void deletePhotosForDate(String date) {
+        File photosDir = new File(dataFolder + File.separator + "photos" + File.separator + date);
+        if (photosDir.exists() && photosDir.isDirectory()) {
+            File[] files = photosDir.listFiles();
             if (files != null) {
                 for (File file : files) {
                     file.delete();
                 }
             }
-            photoFolder.delete();
-            System.out.println("Удалена папка с фото" + date);
+            photosDir.delete();
         }
     }
 
-    // Основные методы
     @FXML
     public void initialize() {
         new File(dataFolder).mkdir();
@@ -199,82 +194,71 @@ public class HelloController {
                 galleryDateToLoad = currentTab.getText();
                 switchScene("Galery.fxml", actionEvent);
             } else {
-                showAlert("Ошибка", "Сначала выберите день");
+                showAlert("Ошибка", "начала выберите день");
             }
         }
     }
-
     @FXML
     public void Save(ActionEvent actionEvent) {
         if (tabPane == null || textAr == null) return;
-
         Tab currentTab = tabPane.getSelectionModel().getSelectedItem();
         if (currentTab != null) {
             String date = currentTab.getText();
             String text = textAr.getText();
-
             try {
                 saveToJSON(date, text);
-                showAlert("Сохранено", "Текст сохране " + date);
+                showAlert("Сохран ено", "текст сохранен " + date);
             } catch (IOException e) {
-                showAlert("О шибка", "Не удалось сохранить");
+                showAlert("Ошибка", "Не удалось сохранить");
             }
         } else {
-            showAlert("еррор", "Нет выбранной вкладки");
+            showAlert("Ошибка", "Нет выбранной вкладки");
         }
     }
-
     @FXML
     public void Delete(ActionEvent actionEvent) {
         if (tabPane == null) return;
-
         Tab currentTab = tabPane.getSelectionModel().getSelectedItem();
         if (currentTab != null) {
             String date = currentTab.getText();
-
             Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-            confirm.setTitle("Удалние");
-            confirm.setHeaderText("Удалить день" + date);
+            confirm.setTitle("Удаление");
+            confirm.setHeaderText("Удалить день " + date);
             confirm.setContentText("Все данные будут удалены");
             ButtonType result = confirm.showAndWait().orElse(ButtonType.CANCEL);
-
             if (result == ButtonType.OK) {
                 tabPane.getTabs().remove(currentTab);
                 deleteJSON(date);
-                showAlert("удалено", "Дуень " + date + " ууален");
-
+                showAlert("У далено", "День " + date + " удалн");
                 if (tabPane.getTabs().isEmpty()) {
                     createTodayTab();
                 }
             }
         } else {
-            showAlert("ошибка", "нет выбранной вкладки");
+            showAlert("Ошибка", "Нет выбранной вкладки");
         }
     }
     @FXML
     public void Search(ActionEvent actionEvent) {
         String searchDate = addText.getText().trim();
         if (searchDate.isEmpty()) {
-            showAlert("ошибка", "Введите дату для поиска");
+            showAlert("Ошилбка", "Введите дату для поиска");
             return;
         }
         if (!isValidDate(searchDate)) {
-            showAlert("Ошибка", "Не верный формат даты формат yyyy-MM-dd");
+            showAlert("Ошибка", "Неверный формаът даты, формат yyyy-MM-dd");
             return;
         }
         File jsonFile = new File(dataFolder + File.separator + searchDate + ".json");
         if (!jsonFile.exists()) {
-            showAlert("Не найдено", "даты " + searchDate + " не существует.");
+            showAlert("Не найдъено", "Дат " + searchDate + " не существует.");
             return;
         }
         dateToOpen = searchDate;
         switchScene("AllDates.fxml", actionEvent);
     }
-    //для Искать
     public void openTabForDate(String date) {
-        if (tabPane == null) {
-            return;
-        }
+        if (tabPane == null) return;
         for (Tab tab : tabPane.getTabs()) {
             if (tab.getText().equals(date)) {
                 tabPane.getSelectionModel().select(tab);
@@ -302,9 +286,9 @@ public class HelloController {
         }
     }
     private File[] loadPhotosForDate(String date) {
-        File photoFolder = new File(dataFolder + File.separator + "photos" + File.separator + date);
-        if (photoFolder.exists() && photoFolder.isDirectory()) {
-            return photoFolder.listFiles(new FilenameFilter() {
+        File dateFolder = new File(dataFolder + File.separator + "photos" + File.separator + date);
+        if (dateFolder.exists() && dateFolder.isDirectory()) {
+            return dateFolder.listFiles(new FilenameFilter() {
                 public boolean accept(File dir, String name) {
                     String lower = name.toLowerCase();
                     return lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png") || lower.endsWith(".gif");
@@ -314,13 +298,13 @@ public class HelloController {
         return new File[0];
     }
     private File[] getCurrentPhotos() {
-        String dateToUse;
+        String date;
         if (galleryDateToLoad != null) {
-            dateToUse = galleryDateToLoad;
+            date = galleryDateToLoad;
         } else {
-            dateToUse = LocalDate.now().format(dateFormatter);
+            date = LocalDate.now().format(dateFormatter);
         }
-        return loadPhotosForDate(dateToUse);
+        return loadPhotosForDate(date);
     }
     private Image getCurrentImage() {
         if (Galery != null) {
@@ -329,13 +313,11 @@ public class HelloController {
         return null;
     }
     private int findCurrentImageIndex(File[] photos, Image currentImage) {
-        if (currentImage == null || photos == null || photos.length == 0) {
-            return 0;
-        }
+        if (currentImage == null || photos == null || photos.length == 0) return 0;
         String currentUrl = currentImage.getUrl();
         for (int i = 0; i < photos.length; i++) {
             String fileUrl = "file:" + photos[i].getAbsolutePath();
-            if (fileUrl.equals(currentUrl)) {
+            if (fileUrl.replace("\\", "/").equals(currentUrl.replace("\\", "/"))) {
                 return i;
             }
         }
@@ -346,17 +328,16 @@ public class HelloController {
         File[] photos = getCurrentPhotos();
         Image currentImage = getCurrentImage();
         int currentIndex = findCurrentImageIndex(photos, currentImage);
-        if (photos != null && photos.length > 0) {
-            currentIndex--;
-            if (currentIndex < 0) {
+        if (photos != null && photos.length > 0 && Galery != null) {
+            if (currentIndex <= 0) {
                 currentIndex = photos.length - 1;
+            } else {
+                currentIndex--;
             }
-            if (currentIndex >= 0 && currentIndex < photos.length && Galery != null) {
-                try {
-                    Image image = new Image("file:" + photos[currentIndex].getAbsolutePath());
-                    Galery.setImage(image);
-                } catch (Exception e) {
-                }
+            try {
+                Image image = new Image("file:" + photos[currentIndex].getAbsolutePath());
+                Galery.setImage(image);
+            } catch (Exception e) {
             }
         }
     }
@@ -365,17 +346,16 @@ public class HelloController {
         File[] photos = getCurrentPhotos();
         Image currentImage = getCurrentImage();
         int currentIndex = findCurrentImageIndex(photos, currentImage);
-        if (photos != null && photos.length > 0) {
-            currentIndex++;
-            if (currentIndex >= photos.length) {
+        if (photos != null && photos.length > 0 && Galery != null) {
+            if (currentIndex >= photos.length - 1) {
                 currentIndex = 0;
+            } else {
+                currentIndex++;
             }
-            if (currentIndex >= 0 && currentIndex < photos.length && Galery != null) {
-                try {
-                    Image image = new Image("file:" + photos[currentIndex].getAbsolutePath());
-                    Galery.setImage(image);
-                } catch (Exception e) {
-                }
+            try {
+                Image image = new Image("file:" + photos[currentIndex].getAbsolutePath());
+                Galery.setImage(image);
+            } catch (Exception e) {
             }
         }
     }
@@ -398,28 +378,23 @@ public class HelloController {
         }
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Выберите фото");
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Картинки", "*.jpg", "*.jpeg", "*.png", "*.gif")
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Картинки", "*.jpg", "*.jpeg", "*.png", "*.gif")
         );
-
         File selectedFile = fileChooser.showOpenDialog(null);
         if (selectedFile != null) {
             try {
                 File dateFolder = new File(dataFolder + File.separator + "photos" + File.separator + currentDate);
-                if (!dateFolder.exists()) {
-                    dateFolder.mkdirs();
-                }
-                String fileName = "photo_" + System.currentTimeMillis() + getFileExtension(selectedFile.getName());
+                if (!dateFolder.exists()) dateFolder.mkdirs();
+                String fileName = System.currentTimeMillis() + getFileExtension(selectedFile.getName());
                 File destFile = new File(dateFolder, fileName);
-                FileInputStream in = new FileInputStream(selectedFile);
-                FileOutputStream out = new FileOutputStream(destFile);
-                byte[] buffer = new byte[1024];
-                int length;
-                while ((length = in.read(buffer)) > 0) {
-                    out.write(buffer, 0, length);
+                try (FileInputStream in = new FileInputStream(selectedFile);
+                     FileOutputStream out = new FileOutputStream(destFile)) {
+                    byte[] buffer = new byte[1024];
+                    int length;
+                    while ((length = in.read(buffer)) > 0) {
+                        out.write(buffer, 0, length);
+                    }
                 }
-                in.close();
-                out.close();
                 if (Galery != null) {
                     Image image = new Image("file:" + destFile.getAbsolutePath());
                     Galery.setImage(image);
