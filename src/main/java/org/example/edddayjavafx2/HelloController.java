@@ -31,7 +31,7 @@ public class HelloController {
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static String dateToOpen = null;
     private static String galleryDateToLoad = null;
-
+    private File tempSelectedFile = null;
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -194,7 +194,7 @@ public class HelloController {
                 galleryDateToLoad = currentTab.getText();
                 switchScene("Galery.fxml", actionEvent);
             } else {
-                showAlert("Ошибка", "начала выберите день");
+                showAlert("Ошибка", "Сначала выберите день");
             }
         }
     }
@@ -207,7 +207,7 @@ public class HelloController {
             String text = textAr.getText();
             try {
                 saveToJSON(date, text);
-                showAlert("Сохран ено", "текст сохранен " + date);
+                showAlert("Сохранено", "Текст сохранен " + date);
             } catch (IOException e) {
                 showAlert("Ошибка", "Не удалось сохранить");
             }
@@ -229,7 +229,7 @@ public class HelloController {
             if (result == ButtonType.OK) {
                 tabPane.getTabs().remove(currentTab);
                 deleteJSON(date);
-                showAlert("У далено", "День " + date + " удалн");
+                showAlert("Удалено", "День " + date + " удален");
                 if (tabPane.getTabs().isEmpty()) {
                     createTodayTab();
                 }
@@ -242,16 +242,16 @@ public class HelloController {
     public void Search(ActionEvent actionEvent) {
         String searchDate = addText.getText().trim();
         if (searchDate.isEmpty()) {
-            showAlert("Ошилбка", "Введите дату для поиска");
+            showAlert("Ошибка", "Введите дату для поиска");
             return;
         }
         if (!isValidDate(searchDate)) {
-            showAlert("Ошибка", "Неверный формаът даты, формат yyyy-MM-dd");
+            showAlert("Ошибка", "Неверный формат даты, формат yyyy-MM-dd");
             return;
         }
         File jsonFile = new File(dataFolder + File.separator + searchDate + ".json");
         if (!jsonFile.exists()) {
-            showAlert("Не найдъено", "Дат " + searchDate + " не существует.");
+            showAlert("Не найдено", "Даты " + searchDate + " не существует.");
             return;
         }
         dateToOpen = searchDate;
@@ -291,7 +291,8 @@ public class HelloController {
             return dateFolder.listFiles(new FilenameFilter() {
                 public boolean accept(File dir, String name) {
                     String lower = name.toLowerCase();
-                    return lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png") || lower.endsWith(".gif");
+                    return lower.endsWith(".jpg") || lower.endsWith(".jpeg") ||
+                            lower.endsWith(".png") || lower.endsWith(".gif");
                 }
             });
         }
@@ -360,52 +361,65 @@ public class HelloController {
         }
     }
     @FXML
-    public void Save1(ActionEvent actionEvent) {
-        File[] photos = getCurrentPhotos();
-        if (photos != null && photos.length > 0) {
-            showAlert("Информация", " фоток " + photos.length);
-        } else {
-            showAlert("Информация", "Нет фоток ");
+    public void Download(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Выберите фото");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("Картинки", "*.jpg", "*.jpeg", "*.png", "*.gif"));
+        File selectedFile = fileChooser.showOpenDialog(null);
+        if (selectedFile != null) {
+            tempSelectedFile = selectedFile;
+            try {
+                Image image = new Image("file:" + selectedFile.getAbsolutePath());
+                Galery.setImage(image);
+                showAlert("Выбрано", "Нажмите 'Сохранить'");
+            } catch (Exception e) {
+                showAlert("Ошибка", "Не открыть фото");
+            }
         }
     }
     @FXML
-    public void Download(ActionEvent actionEvent) {
+    public void Save1(ActionEvent actionEvent) {
+        if (tempSelectedFile == null) {
+            File[] photos = getCurrentPhotos();
+            if (photos != null && photos.length > 0) {
+                showAlert("Информация", " фоток " + photos.length);
+            } else {
+                showAlert("Информация", "Нет фоток ");
+            }
+            return;
+        }
         String currentDate;
         if (galleryDateToLoad != null) {
             currentDate = galleryDateToLoad;
         } else {
             currentDate = LocalDate.now().format(dateFormatter);
         }
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Выберите фото");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Картинки", "*.jpg", "*.jpeg", "*.png", "*.gif")
-        );
-        File selectedFile = fileChooser.showOpenDialog(null);
-        if (selectedFile != null) {
-            try {
-                File dateFolder = new File(dataFolder + File.separator + "photos" + File.separator + currentDate);
-                if (!dateFolder.exists()) dateFolder.mkdirs();
-                String fileName = System.currentTimeMillis() + getFileExtension(selectedFile.getName());
-                File destFile = new File(dateFolder, fileName);
-                try (FileInputStream in = new FileInputStream(selectedFile);
-                     FileOutputStream out = new FileOutputStream(destFile)) {
-                    byte[] buffer = new byte[1024];
-                    int length;
-                    while ((length = in.read(buffer)) > 0) {
-                        out.write(buffer, 0, length);
-                    }
+        try {
+            File dateFolder = new File(dataFolder + File.separator + "photos" + File.separator + currentDate);
+            if (!dateFolder.exists()) dateFolder.mkdirs();
+            String fileName = System.currentTimeMillis() + getFileExtension(tempSelectedFile.getName());
+            File destFile = new File(dateFolder, fileName);
+            try (FileInputStream in = new FileInputStream(tempSelectedFile);
+                 FileOutputStream out = new FileOutputStream(destFile)) {
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = in.read(buffer)) > 0) {
+                    out.write(buffer, 0, length);
                 }
-                if (Galery != null) {
-                    Image image = new Image("file:" + destFile.getAbsolutePath());
-                    Galery.setImage(image);
-                }
-                showAlert("ура", "Фото загружено для " + currentDate);
-
-            } catch (Exception e) {
-                showAlert("Ошибка", "Не удалось загрузить фото");
             }
+            if (Galery != null) {
+                Image image = new Image("file:" + destFile.getAbsolutePath());
+                Galery.setImage(image);
+            }
+            showAlert("ура", "Фото заружено для " + currentDate);
+            tempSelectedFile = null;
+
+        } catch (Exception e) {
+            showAlert("Ошибка", "Не удалось загрузить фото");
         }
     }
+
     private String getFileExtension(String fileName) {
         int dotIndex = fileName.lastIndexOf('.');
         if (dotIndex > 0 && dotIndex < fileName.length() - 1) {
