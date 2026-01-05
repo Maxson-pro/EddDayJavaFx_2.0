@@ -5,7 +5,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.edddayjavafx2.HelloController">
    <children>
       <ImageView fx:id="Galery" fitHeight="362.0" fitWidth="602.0" pickOnBounds="true" preserveRatio="true" />
@@ -32,6 +31,11 @@
       <Button fx:id="bakc1" layoutY="362.0" mnemonicParsing="false" onAction="#bakc1" prefHeight="38.0" prefWidth="76.0" text="к дню">
          <font>
             <Font name="Arial Black" size="16.0" />
+         </font>
+      </Button>
+      <Button fx:id="deletephoto" layoutX="138.0" layoutY="362.0" mnemonicParsing="false" onAction="#DeletePhoto" prefHeight="38.0" prefWidth="76.0" text="Удалить">
+         <font>
+            <Font name="Arial Black" size="12.0" />
          </font>
       </Button>
    </children>
