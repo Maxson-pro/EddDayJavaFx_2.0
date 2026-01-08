@@ -13,10 +13,10 @@ public class AlertManager {
     }
 
     public static boolean showConfirmation(String title, String header, String content) {
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle(title);
-        confirm.setHeaderText(header);
-        confirm.setContentText(content);
-        return confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK;
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        return alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK;
     }
 }

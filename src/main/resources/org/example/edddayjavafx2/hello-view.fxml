@@ -5,23 +5,26 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.edddayjavafx2.HelloController">
-   <children>
-      <Button fx:id="scene_1" layoutX="89.0" layoutY="191.0" mnemonicParsing="false" onAction="#Scene_1" prefHeight="70.0" prefWidth="131.0" text="Все даты" textFill="#8d0303">
-         <font>
-            <Font name="Arial Black" size="18.0" />
-         </font>
-      </Button>
-      <Button fx:id="scene_2" layoutX="380.0" layoutY="191.0" mnemonicParsing="false" onAction="#Scene_2" prefHeight="70.0" prefWidth="131.0" text="Искать по дате" textFill="#368d0a">
-         <font>
-            <Font name="Arial Black" size="13.0" />
-         </font>
-      </Button>
-      <Text layoutX="220.0" layoutY="114.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Делай выбор" wrappingWidth="160.13671875">
-         <font>
-            <Font name="Arial Black" size="20.0" />
-         </font>
-      </Text>
-   </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="400.0" prefWidth="600.0"
+            xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.edddayjavafx2.HelloController">
+    <children>
+        <Button layoutX="89.0" layoutY="191.0" onAction="#Scene_1" prefHeight="70.0" prefWidth="131.0" text="Все даты">
+            <font>
+                <Font name="Arial Black" size="18.0" />
+            </font>
+        </Button>
+        <Button layoutX="380.0" layoutY="191.0" onAction="#Scene_2" prefHeight="70.0" prefWidth="131.0" text="Искать по дате">
+            <font>
+                <Font name="Arial Black" size="13.0" />
+            </font>
+        </Button>
+        <Text layoutX="220.0" layoutY="114.0" text="Делай выбор">
+            <font>
+                <Font name="Arial Black" size="20.0" />
+            </font>
+        </Text>
+    </children>
 </AnchorPane>

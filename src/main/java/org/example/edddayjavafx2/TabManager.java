@@ -23,6 +23,10 @@ public class TabManager {
         new File(dataFolder).mkdir();
         new File(dataFolder + File.separator + "photos").mkdir();
         loadAllTabs();
+      if (TextSearchManager.getDateToOpen() != null) {
+          openTabForDate(TextSearchManager.getDateToOpen());
+          TextSearchManager.setDateToOpen(null);
+      }
     }
 
     public void saveCurrentTab() {
@@ -176,7 +180,7 @@ public class TabManager {
         }
     }
 
-    private void openTabForDate(String date) {
+    public void openTabForDate(String date) {
         if (tabPane == null) return;
         for (Tab tab : tabPane.getTabs()) {
             if (tab.getText().equals(date)) {
