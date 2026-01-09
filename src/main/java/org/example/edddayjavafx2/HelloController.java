@@ -7,16 +7,17 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.skin.DatePickerSkin;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-
+import java.time.LocalDate;
 import static org.example.edddayjavafx2.AlertManager.showAlert;
 
 public class HelloController {
-    @FXML private Label monthYearLabel;
-    @FXML private GridPane calendarGrid;
-    private CalendarLogic calendarLogic;
+    @FXML private StackPane calendarContainer;
+    private DatePicker datePicker;
     @FXML private TextField addText;
     @FXML private TabPane tabPane;
     @FXML private TextArea textAr;
@@ -26,42 +27,22 @@ public class HelloController {
     private TabManager tabManager;
     private PhotoManager photoManager;
     @FXML
-    public void initializeCalendar() {
-        if (monthYearLabel != null && calendarGrid != null) {
-            calendarLogic = new CalendarLogic(monthYearLabel, calendarGrid);
-            calendarLogic.initializeCalendar();
+    private void handleDateSelection(ActionEvent event) {
+        LocalDate selectedDate = datePicker.getValue();
+        if (selectedDate != null) {
+            TextSearchManager.setDateToOpen(selectedDate.toString());
+            switchScene("AllDates.fxml", event);
         }
     }
-    @FXML
-    public void previousMonth(ActionEvent actionEvent) {
-        if (calendarLogic != null) {
-            calendarLogic.previousMonth();
-        }
-    }
-    @FXML
-    public void nextMonth(ActionEvent actionEvent) {
-        if (calendarLogic != null) {
-            calendarLogic.nextMonth();
-        }
-    }
-    @FXML
-    public void today(ActionEvent actionEvent) {
-        if (calendarLogic != null) {
-            calendarLogic.today();
-        }
-    }
-    @FXML
-    public void backToMain(ActionEvent actionEvent) {
-        switchScene("AllDates.fxml", actionEvent);
-    }
-    @FXML
-    public void EddDay(ActionEvent actionEvent) {
-        switchScene("Calendar.fxml", actionEvent);
-    }
+
     @FXML
     public void initialize() {
-        if (monthYearLabel != null && calendarGrid != null) {
-            initializeCalendar();
+        if (calendarContainer != null) {
+            datePicker = new DatePicker(LocalDate.now());
+            DatePickerSkin skin = new DatePickerSkin(datePicker);
+            Node calendarVisual = skin.getPopupContent();
+            calendarContainer.getChildren().add(calendarVisual);
+            datePicker.setOnAction(this::handleDateSelection);
         }
         if (tabPane != null) {
             tabManager = new TabManager(tabPane, textAr);
@@ -72,26 +53,15 @@ public class HelloController {
         }
     }
     @FXML
-    public void previousYear(ActionEvent actionEvent) {
-        if (calendarLogic != null) {
-            calendarLogic.previousYear();
+    public void today(ActionEvent actionEvent) {
+        if (datePicker != null) {
+            datePicker.setValue(LocalDate.now());
         }
     }
 
-    @FXML
-    public void nextYear(ActionEvent actionEvent) {
-        if (calendarLogic != null) {
-            calendarLogic.nextYear();
-        }
-    }
+    @FXML public void FindText1(ActionEvent actionEvent) { FindText(actionEvent); }
 
-    @FXML
-    public void FindText1(ActionEvent actionEvent) {
-        FindText(actionEvent);
-    }
-
-    @FXML
-    public void FindText(ActionEvent actionEvent) {
+    @FXML public void FindText(ActionEvent actionEvent) {
         String searchText = findtext1.getText().trim();
         if (!searchText.isEmpty()) {
             SimpleTextSearchManager.search(searchText, actionEvent);
@@ -100,25 +70,13 @@ public class HelloController {
         }
     }
 
-    @FXML public void Scene_1(ActionEvent actionEvent) {
-        switchScene("AllDates.fxml", actionEvent);
-    }
-
-    @FXML public void Scene_2(ActionEvent actionEvent) {
-        switchScene("Searchdate.fxml", actionEvent);
-    }
-
-    @FXML public void SearchText(ActionEvent actionEvent) {
-        switchScene("SearchByText.fxml", actionEvent);
-    }
-
-    @FXML public void Back(ActionEvent actionEvent) {
-        switchScene("hello-view.fxml", actionEvent);
-    }
-
-    @FXML public void Exit(ActionEvent actionEvent) {
-        System.exit(0);
-    }
+    @FXML public void Scene_1(ActionEvent actionEvent) { switchScene("AllDates.fxml", actionEvent); }
+    @FXML public void Scene_2(ActionEvent actionEvent) { switchScene("Searchdate.fxml", actionEvent); }
+    @FXML public void SearchText(ActionEvent actionEvent) { switchScene("SearchByText.fxml", actionEvent); }
+    @FXML public void Back(ActionEvent actionEvent) { switchScene("hello-view.fxml", actionEvent); }
+    @FXML public void Exit(ActionEvent actionEvent) { System.exit(0); }
+    @FXML public void backToMain(ActionEvent actionEvent) { switchScene("AllDates.fxml", actionEvent); }
+    @FXML public void EddDay(ActionEvent actionEvent) { switchScene("Calendar.fxml", actionEvent); }
 
     @FXML public void Photo(ActionEvent actionEvent) {
         if (tabManager != null) {
@@ -131,64 +89,21 @@ public class HelloController {
             }
         }
     }
-
-    @FXML public void Save(ActionEvent actionEvent) {
-        if (tabManager != null) {
-            tabManager.saveCurrentTab();
-        }
-    }
-
-    @FXML public void Delete(ActionEvent actionEvent) {
-        if (tabManager != null) {
-            tabManager.deleteCurrentTab();
-        }
-    }
+    @FXML public void Save(ActionEvent actionEvent) { if (tabManager != null) tabManager.saveCurrentTab(); }
+    @FXML public void Delete(ActionEvent actionEvent) { if (tabManager != null) tabManager.deleteCurrentTab(); }
 
     @FXML public void Search(ActionEvent actionEvent) {
         if (addText != null) {
             DateSearchManager.search(addText.getText().trim(), actionEvent);
         }
     }
-
-    @FXML public void initializeGalery() {
-        if (photoManager != null) {
-            photoManager.initializeGalery();
-        }
-    }
-
-    @FXML public void BackPhoto(ActionEvent actionEvent) {
-        if (photoManager != null) {
-            photoManager.backPhoto();
-        }
-    }
-
-    @FXML public void Forward(ActionEvent actionEvent) {
-        if (photoManager != null) {
-            photoManager.forward();
-        }
-    }
-
-    @FXML public void Download(ActionEvent actionEvent) {
-        if (photoManager != null) {
-            photoManager.download();
-        }
-    }
-
-    @FXML public void Save1(ActionEvent actionEvent) {
-        if (photoManager != null) {
-            photoManager.savePhoto();
-        }
-    }
-
-    @FXML public void DeletePhoto(ActionEvent actionEvent) {
-        if (photoManager != null) {
-            photoManager.deletePhoto();
-        }
-    }
-
-    @FXML public void bakc1(ActionEvent actionEvent) {
-        PhotoManager.backToMain(actionEvent);
-    }
+    @FXML public void initializeGalery() { if (photoManager != null) photoManager.initializeGalery(); }
+    @FXML public void BackPhoto(ActionEvent actionEvent) { if (photoManager != null) photoManager.backPhoto(); }
+    @FXML public void Forward(ActionEvent actionEvent) { if (photoManager != null) photoManager.forward(); }
+    @FXML public void Download(ActionEvent actionEvent) { if (photoManager != null) photoManager.download(); }
+    @FXML public void Save1(ActionEvent actionEvent) { if (photoManager != null) photoManager.savePhoto(); }
+    @FXML public void DeletePhoto(ActionEvent actionEvent) { if (photoManager != null) photoManager.deletePhoto(); }
+    @FXML public void bakc1(ActionEvent actionEvent) { PhotoManager.backToMain(actionEvent); }
 
     private void switchScene(String fxmlFile, ActionEvent actionEvent) {
         try {
