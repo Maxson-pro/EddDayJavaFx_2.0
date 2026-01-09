@@ -31,7 +31,9 @@ public class HelloController {
         LocalDate selectedDate = datePicker.getValue();
         if (selectedDate != null) {
             TextSearchManager.setDateToOpen(selectedDate.toString());
-            switchScene("AllDates.fxml", event);
+            if (calendarContainer.getScene() != null) {
+                switchScene("AllDates.fxml", new ActionEvent(calendarContainer, null));
+            }
         }
     }
 
@@ -110,9 +112,14 @@ public class HelloController {
     private void switchScene(String fxmlFile, ActionEvent actionEvent) {
         try {
             Parent root = FXMLLoader.load(getClass().getResource(fxmlFile));
-            Scene scene = new Scene(root);
-            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-            stage.setScene(scene);
+            Node sourceNode = (Node) actionEvent.getSource();
+            Stage stage;
+            if (sourceNode.getScene() != null) {
+                stage = (Stage) sourceNode.getScene().getWindow();
+            } else {
+                stage = (Stage) calendarContainer.getScene().getWindow();
+            }
+            stage.setScene(new Scene(root));
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
