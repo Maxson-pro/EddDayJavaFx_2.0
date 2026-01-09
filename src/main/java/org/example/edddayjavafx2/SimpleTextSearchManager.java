@@ -12,7 +12,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 
@@ -23,7 +22,7 @@ public class SimpleTextSearchManager {
     public static void search(String text, ActionEvent actionEvent) {
         searchText = text.toLowerCase().trim();
         if (searchText.isEmpty()) {
-            showAlert("Ошика", "Введите текамт");
+            showAlert("Ошибка", "Введите текст для поиска");
             return;
         }
         createResultsScene(actionEvent);
@@ -33,6 +32,7 @@ public class SimpleTextSearchManager {
             VBox vbox = new VBox(10);
             File dataDir = new File("data");
             int foundCount = 0;
+            String[] searchWords = searchText.split(" ");
             if (dataDir.exists() && dataDir.isDirectory()) {
                 File[] files = dataDir.listFiles();
                 if (files != null) {
@@ -40,8 +40,19 @@ public class SimpleTextSearchManager {
                         File file = files[i];
                         if (file.isFile() && file.getName().endsWith(".json")) {
                             String content = SimpleJSON.loadFromFile(file.getAbsolutePath());
-                            if (content != null && content.toLowerCase().contains(searchText)) {
-                                foundCount++;
+                            if (content != null) {
+                                String contentLower = content.toLowerCase();
+                                boolean found = false;
+                                for (int j = 0; j < searchWords.length; j++) {
+                                    if (contentLower.contains(searchWords[j])) {
+                                        found = true;
+                                        break;
+                                    }
+                                }
+
+                                if (found) {
+                                    foundCount++;
+                                }
                             }
                         }
                     }
@@ -51,20 +62,34 @@ public class SimpleTextSearchManager {
                         File file = files[i];
                         if (file.isFile() && file.getName().endsWith(".json")) {
                             String content = SimpleJSON.loadFromFile(file.getAbsolutePath());
-                            if (content != null && content.toLowerCase().contains(searchText)) {
-                                String date = file.getName().substring(0, file.getName().length() - 5);
-                                foundDates[index] = date;
-                                index++;
+                            if (content != null) {
+                                String contentLower = content.toLowerCase();
+                                boolean found = false;
+                                for (int j = 0; j < searchWords.length; j++) {
+                                    if (contentLower.contains(searchWords[j])) {
+                                        found = true;
+                                        break;
+                                    }
+                                }
+                                if (found) {
+                                    String date = file.getName().substring(0, file.getName().length() - 5);
+                                    foundDates[index] = date;
+                                    index++;
+                                }
                             }
                         }
                     }
                     if (foundCount == 0) {
-                        Button noResults = new Button("Ничего не найдено для: " + searchText);
+                        Button noResults = new Button("Ничего не найдено \"" + searchText + "\"");
                         noResults.setDisable(true);
                         vbox.getChildren().add(noResults);
                     } else {
+                        Button infoButton = new Button("Ищем слова: " + String.join(", ", searchWords));
+                        infoButton.setDisable(true);
+                        infoButton.setPrefWidth(400);
+                        vbox.getChildren().add(infoButton);
                         for (int i = 0; i < foundDates.length; i++) {
-                            Button dateButton = new Button(foundDates[i]);
+                            Button dateButton = new Button("о " + foundDates[i]);
                             dateButton.setPrefWidth(200);
                             final String date = foundDates[i];
                             dateButton.setOnAction(new javafx.event.EventHandler<ActionEvent>() {

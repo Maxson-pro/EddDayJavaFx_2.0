@@ -8,11 +8,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import static org.example.edddayjavafx2.AlertManager.showAlert;
 
 public class HelloController {
+    @FXML private Label monthYearLabel;
+    @FXML private GridPane calendarGrid;
+    private CalendarLogic calendarLogic;
     @FXML private TextField addText;
     @FXML private TabPane tabPane;
     @FXML private TextArea textAr;
@@ -21,9 +25,44 @@ public class HelloController {
 
     private TabManager tabManager;
     private PhotoManager photoManager;
-
+    @FXML
+    public void initializeCalendar() {
+        if (monthYearLabel != null && calendarGrid != null) {
+            calendarLogic = new CalendarLogic(monthYearLabel, calendarGrid);
+            calendarLogic.initializeCalendar();
+        }
+    }
+    @FXML
+    public void previousMonth(ActionEvent actionEvent) {
+        if (calendarLogic != null) {
+            calendarLogic.previousMonth();
+        }
+    }
+    @FXML
+    public void nextMonth(ActionEvent actionEvent) {
+        if (calendarLogic != null) {
+            calendarLogic.nextMonth();
+        }
+    }
+    @FXML
+    public void today(ActionEvent actionEvent) {
+        if (calendarLogic != null) {
+            calendarLogic.today();
+        }
+    }
+    @FXML
+    public void backToMain(ActionEvent actionEvent) {
+        switchScene("AllDates.fxml", actionEvent);
+    }
+    @FXML
+    public void EddDay(ActionEvent actionEvent) {
+        switchScene("Calendar.fxml", actionEvent);
+    }
     @FXML
     public void initialize() {
+        if (monthYearLabel != null && calendarGrid != null) {
+            initializeCalendar();
+        }
         if (tabPane != null) {
             tabManager = new TabManager(tabPane, textAr);
             tabManager.initialize();

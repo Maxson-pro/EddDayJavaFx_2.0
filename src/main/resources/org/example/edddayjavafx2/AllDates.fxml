@@ -33,5 +33,10 @@
             <Font name="Arial Black" size="15.0" />
          </font>
       </Button>
+      <Button fx:id="eddDay" layoutX="360.0" layoutY="354.0" mnemonicParsing="false" onAction="#EddDay" prefHeight="45.0" prefWidth="80.0" text="EDD" textFill="#007c04">
+         <font>
+            <Font name="Arial Black" size="18.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>
