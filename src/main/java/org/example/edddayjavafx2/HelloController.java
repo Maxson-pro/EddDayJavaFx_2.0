@@ -55,8 +55,10 @@ public class HelloController {
     @FXML
     public void today(ActionEvent actionEvent) {
         if (datePicker != null) {
+            datePicker.setValue(null);
             datePicker.setValue(LocalDate.now());
         }
+
     }
 
     @FXML public void FindText1(ActionEvent actionEvent) { FindText(actionEvent); }
