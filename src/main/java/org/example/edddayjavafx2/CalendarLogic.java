@@ -91,4 +91,13 @@ public class CalendarLogic {
         currentYearMonth = YearMonth.now();
         updateCalendar();
     }
+    public void previousYear() {
+        currentYearMonth = currentYearMonth.minusYears(1);
+        updateCalendar();
+    }
+
+    public void nextYear() {
+        currentYearMonth = currentYearMonth.plusYears(1);
+        updateCalendar();
+    }
 }

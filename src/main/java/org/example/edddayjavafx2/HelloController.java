@@ -71,6 +71,19 @@ public class HelloController {
             photoManager = new PhotoManager(Galery);
         }
     }
+    @FXML
+    public void previousYear(ActionEvent actionEvent) {
+        if (calendarLogic != null) {
+            calendarLogic.previousYear();
+        }
+    }
+
+    @FXML
+    public void nextYear(ActionEvent actionEvent) {
+        if (calendarLogic != null) {
+            calendarLogic.nextYear();
+        }
+    }
 
     @FXML
     public void FindText1(ActionEvent actionEvent) {
