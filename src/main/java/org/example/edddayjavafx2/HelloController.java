@@ -11,7 +11,15 @@ import javafx.scene.control.skin.DatePickerSkin;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import static org.example.edddayjavafx2.AlertManager.showAlert;
 
@@ -124,5 +132,39 @@ public class HelloController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    @FXML
+    public void DonwlFILE(ActionEvent actionEvent) {
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Выберите папку для сохранения");
+        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        File selectedDirectory = directoryChooser.showDialog(stage);
+        if (selectedDirectory != null) {
+            try {
+                File sourceFolder = new File("data");
+                File targetFolder = new File(selectedDirectory, "Recordings_" + LocalDate.now());
+                copyDirectory(sourceFolder, targetFolder);
+                AlertManager.showAlert("ура", "Данные в " + targetFolder.getAbsolutePath());
+            } catch (IOException e) {
+                AlertManager.showAlert("Ошибка", "Ошибка при копировании " + e.getMessage());
+            }
+        }
+    }
+
+    private void copyDirectory(File sourceFolder, File targetFolder) throws IOException {
+      if (sourceFolder.isDirectory()) {
+          if (!targetFolder.exists()) {
+              if (targetFolder.mkdirs());
+          }
+          String[] children = sourceFolder.list();
+          if (children != null) {
+              for (int i=0; i < children.length; i++) {
+                  copyDirectory(new File(sourceFolder, children[i]),
+                          new File(targetFolder, children[i]));
+              }
+          }
+      }else {
+          Files.copy(sourceFolder.toPath(), targetFolder.toPath(), StandardCopyOption.REPLACE_EXISTING);
+      }
     }
 }

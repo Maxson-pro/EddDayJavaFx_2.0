@@ -38,5 +38,10 @@
             <Font name="Arial Black" size="18.0" />
          </font>
       </Button>
+      <Button fx:id="DonwlFile" layoutX="120.0" layoutY="354.0" mnemonicParsing="false" onAction="#DonwlFILE" prefHeight="45.0" prefWidth="80.0" text="Donw FILE" textFill="#1430ae">
+         <font>
+            <Font name="Arial Black" size="11.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>
