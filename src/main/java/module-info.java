@@ -4,6 +4,7 @@ module org.example.edddayjavafx2 {
     requires java.desktop;
     requires javafx.graphics;
     requires javafx.base;
+    requires com.google.gson;
 
 
     opens org.example.edddayjavafx2 to javafx.fxml;
