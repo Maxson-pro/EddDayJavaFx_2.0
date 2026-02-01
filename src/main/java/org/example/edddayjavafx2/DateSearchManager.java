@@ -39,7 +39,7 @@ public class DateSearchManager {
             stage.setScene(scene);
         } catch (Exception e) {
             e.printStackTrace();
-            AlertManager.showAlert("Ошибка", "Не удалось переключиться на список дат");
+            AlertManager.showAlert("Ошибка", "Не удалось переключиться на список даты");
         }
     }
     public static String getDateToOpen() {
