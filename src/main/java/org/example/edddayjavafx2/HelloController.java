@@ -19,6 +19,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -212,4 +214,34 @@ public class HelloController {
             }
         }
     }
-}
+   @FXML
+    public void UploadFile(ActionEvent actionEvent) {
+       FileChooser fileChooser = new FileChooser();
+       fileChooser.setTitle("ИПОРТ ИЗ ZИП");
+       fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Zip-архив", "*.zip"));
+       Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+       File zipF = fileChooser.showOpenDialog(stage); // Для импорта лучше showOpenDialog
+       if (zipF != null) {
+           List<String> errorsRep = new ArrayList<>();
+           try {
+               ArchiveManager.ZipReporting(zipF, ".", errorsRep);
+               if (tabPane != null) {
+                   tabPane.getTabs().clear();
+               }
+               if (errorsRep.isEmpty()) {
+               AlertManager.showAlert("Ура", "Пососите");
+           }else {
+                   StringBuilder rep = new StringBuilder("Загрузка есть но пару фалов нет");
+                   for (String error : errorsRep) {
+                       rep.append("-").append(error).append("\n");
+                   }
+                   AlertManager.showAlert("Внимание говорит Москва", rep.toString());
+               }
+               switchScene("hello-view.fxml", actionEvent);
+
+           } catch (IOException e) {
+               AlertManager.showAlert("Aшiбачка", "пизда тебе" + e.getMessage());
+           }
+       }
+   }
+    }
