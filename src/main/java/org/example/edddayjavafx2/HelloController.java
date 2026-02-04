@@ -214,35 +214,42 @@ public class HelloController {
             }
         }
     }
-   @FXML
+  @FXML
     public void UploadFile(ActionEvent actionEvent) {
-       FileChooser fileChooser = new FileChooser();
-       fileChooser.setTitle("ИПОРТ ИЗ ZИП");
-       fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Zip-архив", "*.zip"));
-       Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-       File zipF = fileChooser.showOpenDialog(stage); 
-        
-       if (zipF != null) {
-           List<String> errorsRep = new ArrayList<>();
-           try {
-               ArchiveManager.ZipReporting(zipF, ".", errorsRep);
-               if (tabPane != null) {
-                   tabPane.getTabs().clear();
-               }
-               if (errorsRep.isEmpty()) {
-               AlertManager.showAlert("Ура", "Пососите");
-           }else {
-                   StringBuilder rep = new StringBuilder("Загрузка есть но пару фалов нет");
-                   for (String error : errorsRep) {
-                       rep.append("-").append(error).append("\n");
-                   }
-                   AlertManager.showAlert("Внимание говорит Москва", rep.toString());
-               }
-               switchScene("hello-view.fxml", actionEvent);
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("ИПОРТ ИЗ ZИП"); 
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Zip-архив", "*.zip"));
 
-           } catch (IOException e) {
-               AlertManager.showAlert("Aшiбачка", "пизда тебе" + e.getMessage());
-           }
-       }
-   }
+        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        File zipF = fileChooser.showOpenDialog(stage);
+
+        if (zipF != null) {
+            List<String> errorsRep = new ArrayList<>();
+            try {
+                ArchiveManager.ZipReporting(zipF, ".", errorsRep);
+
+                if (tabPane != null) {
+                    tabPane.getTabs().clear();
+                }
+
+                if (errorsRep.isEmpty()) {
+                  
+                    AlertManager.showAlert("Ура", "Пососите");
+                } else {
+                 
+                    StringBuilder rep = new StringBuilder("Загрузка есть но пару фалов нет\n");
+                    for (String error : errorsRep) {
+                        rep.append("- ").append(error).append("\n");
+                    }
+                    AlertManager.showAlert("Внимание говорит Москва", rep.toString());
+                }
+                
+                switchScene("hello-view.fxml", actionEvent);
+
+            } catch (IOException e) {
+             
+                AlertManager.showAlert("Aшiбачка", "пизда тебе" + e.getMessage());
+            }
+        }
+    }
     }
