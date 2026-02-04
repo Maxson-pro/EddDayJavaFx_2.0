@@ -220,7 +220,8 @@ public class HelloController {
        fileChooser.setTitle("ИПОРТ ИЗ ZИП");
        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Zip-архив", "*.zip"));
        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-       File zipF = fileChooser.showOpenDialog(stage); // Для импорта лучше showOpenDialog
+       File zipF = fileChooser.showOpenDialog(stage); 
+        
        if (zipF != null) {
            List<String> errorsRep = new ArrayList<>();
            try {
