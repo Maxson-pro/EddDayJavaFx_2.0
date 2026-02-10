@@ -289,12 +289,11 @@ public class HelloController {
                     AlertManager.showAlert("Гоотово", "на Янекс фДиске.");
                 });
 
-            } catch (Exception e) {
-                javafx.application.Platform.runLater(() -> {
-                    AlertManager.showAlert("Ошибка", "файлы: " + e.getMessage());
-                });
-                e.printStackTrace();
-            }
+            }catch(Exception e){
+                    javafx.application.Platform.runLater(() -> {
+                        AlertManager.showAlert("Ошибка", "иди нахуй " + e.getMessage());
+                    });
+                }
         }).start();
     }
 
