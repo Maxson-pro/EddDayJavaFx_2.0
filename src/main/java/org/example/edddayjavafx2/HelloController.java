@@ -26,12 +26,18 @@ import java.util.zip.ZipOutputStream;
 
 public class HelloController {
 
-    @FXML private StackPane calendarContainer;
-    @FXML private TextField searchField;
-    @FXML private TabPane tabPane;
-    @FXML private TextArea mainTextArea;
-    @FXML private ImageView galleryView;
-    @FXML private TextField textSearchField;
+    @FXML
+    private StackPane calendarContainer;
+    @FXML
+    private TextField searchField;
+    @FXML
+    private TabPane tabPane;
+    @FXML
+    private TextArea mainTextArea;
+    @FXML
+    private ImageView galleryView;
+    @FXML
+    private TextField textSearchField;
 
     private DatePicker datePicker;
     private TabManager tabManager;
@@ -62,10 +68,25 @@ public class HelloController {
         }
     }
 
-    @FXML public void showAllDates(ActionEvent event) { switchScene("AllDates.fxml", event); }
-    @FXML public void showSearchDate(ActionEvent event) { switchScene("Searchdate.fxml", event); }
-    @FXML public void showSearchText(ActionEvent event) { switchScene("SearchByText.fxml", event); }
-    @FXML public void openCalendar(ActionEvent event) { switchScene("Calendar.fxml", event); }
+    @FXML
+    public void showAllDates(ActionEvent event) {
+        switchScene("AllDates.fxml", event);
+    }
+
+    @FXML
+    public void showSearchDate(ActionEvent event) {
+        switchScene("Searchdate.fxml", event);
+    }
+
+    @FXML
+    public void showSearchText(ActionEvent event) {
+        switchScene("SearchByText.fxml", event);
+    }
+
+    @FXML
+    public void openCalendar(ActionEvent event) {
+        switchScene("Calendar.fxml", event);
+    }
 
     @FXML
     public void openGallery(ActionEvent event) {
@@ -80,9 +101,20 @@ public class HelloController {
         }
     }
 
-    @FXML public void goBack(ActionEvent event) { switchScene("hello-view.fxml", event); }
-    @FXML public void backToMainList(ActionEvent event) { switchScene("AllDates.fxml", event); }
-    @FXML public void exitApp(ActionEvent event) { System.exit(0); }
+    @FXML
+    public void goBack(ActionEvent event) {
+        switchScene("hello-view.fxml", event);
+    }
+
+    @FXML
+    public void backToMainList(ActionEvent event) {
+        switchScene("AllDates.fxml", event);
+    }
+
+    @FXML
+    public void exitApp(ActionEvent event) {
+        System.exit(0);
+    }
 
     @FXML
     public void resetToToday(ActionEvent event) {
@@ -118,30 +150,61 @@ public class HelloController {
         }
     }
 
-    @FXML public void saveTab(ActionEvent event) { if (tabManager != null) tabManager.saveCurrentTab(); }
-    @FXML public void deleteTab(ActionEvent event) { if (tabManager != null) tabManager.deleteCurrentTab(); }
-    @FXML public void initGallery() { if (photoManager != null) photoManager.initializeGallery(); }
-    @FXML public void prevPhoto(ActionEvent event) { if (photoManager != null) photoManager.showPreviousPhoto(); }
-    @FXML public void nextPhoto(ActionEvent event) { if (photoManager != null) photoManager.showNextPhoto(); }
-    @FXML public void selectPhotoFromFile(ActionEvent event) { if (photoManager != null) photoManager.selectPhoto(); }
-    @FXML public void saveSelectedPhoto(ActionEvent event) { if (photoManager != null) photoManager.savePhotoToDisk(); }
-    @FXML public void deleteCurrentPhoto(ActionEvent event) { if (photoManager != null) photoManager.deletePhoto(); }
+    @FXML
+    public void saveTab(ActionEvent event) {
+        if (tabManager != null) tabManager.saveCurrentTab();
+    }
+
+    @FXML
+    public void deleteTab(ActionEvent event) {
+        if (tabManager != null) tabManager.deleteCurrentTab();
+    }
+
+    @FXML
+    public void initGallery() {
+        if (photoManager != null) photoManager.initializeGallery();
+    }
+
+    @FXML
+    public void prevPhoto(ActionEvent event) {
+        if (photoManager != null) photoManager.showPreviousPhoto();
+    }
+
+    @FXML
+    public void nextPhoto(ActionEvent event) {
+        if (photoManager != null) photoManager.showNextPhoto();
+    }
+
+    @FXML
+    public void selectPhotoFromFile(ActionEvent event) {
+        if (photoManager != null) photoManager.selectPhoto();
+    }
+
+    @FXML
+    public void saveSelectedPhoto(ActionEvent event) {
+        if (photoManager != null) photoManager.savePhotoToDisk();
+    }
+
+    @FXML
+    public void deleteCurrentPhoto(ActionEvent event) {
+        if (photoManager != null) photoManager.deletePhoto();
+    }
 
     @FXML
     public void exportAndClearData(ActionEvent event) {
-     FileChooser fileChooser = new FileChooser();
+        FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Скачивание и полная очистка");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("ZIP-архив", "*.zip"));
-  fileChooser.setInitialFileName("Recordings_" + LocalDate.now() + ".zip");
+        fileChooser.setInitialFileName("Recordings_" + LocalDate.now() + ".zip");
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         File zipFile = fileChooser.showSaveDialog(stage);
 
         if (zipFile != null) {
             try {
-         File sourceFolder = new File("data");
+                File sourceFolder = new File("data");
                 zipDirectory(sourceFolder, zipFile);
-             deleteDirectory(sourceFolder);
+                deleteDirectory(sourceFolder);
                 if (tabPane != null) {
                     tabPane.getTabs().clear();
                 }
@@ -154,9 +217,9 @@ public class HelloController {
 
     private void switchScene(String fxmlFile, ActionEvent event) {
         try {
-        Parent root = FXMLLoader.load(getClass().getResource(fxmlFile));
+            Parent root = FXMLLoader.load(getClass().getResource(fxmlFile));
             Node sourceNode = (Node) event.getSource();
-        Stage stage;
+            Stage stage;
             if (sourceNode.getScene() != null) {
                 stage = (Stage) sourceNode.getScene().getWindow();
             } else {
@@ -172,7 +235,7 @@ public class HelloController {
     private void deleteDirectory(File directory) {
         if (directory.exists()) {
             File[] files = directory.listFiles();
-      if (files != null) {
+            if (files != null) {
                 for (int i = 0; i < files.length; i++) {
                     if (files[i].isDirectory()) {
                         deleteDirectory(files[i]);
@@ -186,9 +249,9 @@ public class HelloController {
     }
 
     private void zipDirectory(File folder, File zipFile) throws IOException {
-     FileOutputStream fos = new FileOutputStream(zipFile);
+        FileOutputStream fos = new FileOutputStream(zipFile);
         ZipOutputStream zos = new ZipOutputStream(fos);
-     addFolderToZip("", folder, zos);
+        addFolderToZip("", folder, zos);
         zos.close();
         fos.close();
     }
@@ -196,52 +259,81 @@ public class HelloController {
     private void addFolderToZip(String path, File srcFolder, ZipOutputStream zos) throws IOException {
         String[] files = srcFolder.list();
         if (files == null) return;
-      for (int i = 0; i < files.length; i++) {
+        for (int i = 0; i < files.length; i++) {
             String currentPath = path.isEmpty() ? files[i] : path + "/" + files[i];
-        File file = new File(srcFolder, files[i]);
+            File file = new File(srcFolder, files[i]);
             if (file.isDirectory()) {
                 addFolderToZip(currentPath, file, zos);
             } else {
-            byte[] buf = new byte[1024];
+                byte[] buf = new byte[1024];
                 FileInputStream in = new FileInputStream(file);
                 zos.putNextEntry(new ZipEntry(currentPath));
-   int len;
+                int len;
                 while ((len = in.read(buf)) > 0) {
-              zos.write(buf, 0, len);
-         }
+                    zos.write(buf, 0, len);
+                }
                 zos.closeEntry();
                 in.close();
             }
         }
     }
-   @FXML
-    public void UploadFile(ActionEvent actionEvent) {
-       FileChooser fileChooser = new FileChooser();
-       fileChooser.setTitle("ИПОРТ ИЗ ZИП");
-       fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Zip-архив", "*.zip"));
-       Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-       File zipF = fileChooser.showOpenDialog(stage); // Для импорта лучше showOpenDialog
-       if (zipF != null) {
-           List<String> errorsRep = new ArrayList<>();
-           try {
-               ArchiveManager.ZipReporting(zipF, ".", errorsRep);
-               if (tabPane != null) {
-                   tabPane.getTabs().clear();
-               }
-               if (errorsRep.isEmpty()) {
-               AlertManager.showAlert("Ура", "Пососите");
-           }else {
-                   StringBuilder rep = new StringBuilder("Загрузка есть но пару фалов нет");
-                   for (String error : errorsRep) {
-                       rep.append("-").append(error).append("\n");
-                   }
-                   AlertManager.showAlert("Внимание говорит Москва", rep.toString());
-               }
-               switchScene("hello-view.fxml", actionEvent);
 
-           } catch (IOException e) {
-               AlertManager.showAlert("Aшiбачка", "пизда тебе" + e.getMessage());
-           }
-       }
-   }
+    @FXML
+    public void uploadDirec(ActionEvent event) {
+        String token = "y0__xChsowQGNuWAyC62bWnFjDHrPemCD-V6KePdrM_QyX7R9tvAGJkYMYI";
+        File dataFolder = new File("data");
+        new Thread(() -> {
+            try {
+                CloudService.uploadFolder(dataFolder, token);
+                javafx.application.Platform.runLater(() -> {
+                    AlertManager.showAlert("Гоотово", "на Янекс фДиске.");
+                });
+
+            } catch (Exception e) {
+                javafx.application.Platform.runLater(() -> {
+                    AlertManager.showAlert("Ошибка", "файлы: " + e.getMessage());
+                });
+                e.printStackTrace();
+            }
+        }).start();
     }
+
+    @FXML
+    public void UploadFile(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("ИПОРТ ИЗ ZИП");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Zip-архив", "*.zip"));
+
+        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        File zipF = fileChooser.showOpenDialog(stage);
+
+        if (zipF != null) {
+            List<String> errorsRep = new ArrayList<>();
+            try {
+                ArchiveManager.ZipReporting(zipF, ".", errorsRep);
+
+                if (tabPane != null) {
+                    tabPane.getTabs().clear();
+                }
+
+                if (errorsRep.isEmpty()) {
+
+                    AlertManager.showAlert("Ура", "Пососите");
+                } else {
+
+                    StringBuilder rep = new StringBuilder("Загрузка есть но пару фалов нет");
+                    for (String error : errorsRep) {
+                        rep.append("- ").append(error).append("");
+                    }
+                    AlertManager.showAlert("Внимание говорит Москва", rep.toString());
+                }
+
+                switchScene("hello-view.fxml", actionEvent);
+
+            } catch (IOException e) {
+
+                AlertManager.showAlert("Aшiбачка", "пизда тебе" + e.getMessage());
+            }
+        }
+    }
+}

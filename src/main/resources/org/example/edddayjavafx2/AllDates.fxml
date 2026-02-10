@@ -16,7 +16,7 @@
         <Button layoutY="354.0" mnemonicParsing="false" onAction="#goBack" prefHeight="45.0" prefWidth="73.0" text="НАЗАД">
             <font><Font name="Arial Black" size="15.0" /></font>
         </Button>
-        <TabPane fx:id="tabPane" layoutY="-14.0" prefHeight="353.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" />
+        <TabPane fx:id="tabPane" layoutY="-14.0" prefHeight="323.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" />
         <Button layoutX="200.0" layoutY="354.0" mnemonicParsing="false" onAction="#saveTab" prefHeight="45.0" prefWidth="80.0" text="Save" textFill="#2f9e2f">
             <font><Font name="Arial Black" size="18.0" /></font>
         </Button>
@@ -32,6 +32,11 @@
       <Button layoutX="73.0" layoutY="354.0" mnemonicParsing="false" onAction="#UploadFile" prefHeight="45.0" prefWidth="54.0" text="Upload">
          <font>
             <Font name="Arial Bold Italic" size="11.0" />
+         </font>
+      </Button>
+      <Button layoutX="520.0" layoutY="309.0" mnemonicParsing="false" onAction="#uploadDirec" prefHeight="45.0" prefWidth="80.0" text="upl">
+         <font>
+            <Font name="Arial Black" size="17.0" />
          </font>
       </Button>
     </children>
