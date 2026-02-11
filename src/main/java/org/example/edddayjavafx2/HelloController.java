@@ -25,7 +25,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class HelloController {
-
+    @FXML
+    private TextField tokenField;
     @FXML
     private StackPane calendarContainer;
     @FXML
@@ -280,7 +281,12 @@ public class HelloController {
 
     @FXML
     public void uploadDirec(ActionEvent event) {
-        String token = "y0__xChsowQGNuWAyC62bWnFjDHrPemCD-V6KePdrM_QyX7R9tvAGJkYMYI";
+      String token = tokenField.getText();
+      if (token == null || token.trim().isEmpty()) {
+          AlertManager.showAlert("Ошибка", "НЕХОЧЕШЬ ТОКЕН ДОБАВИТЬ?");
+          return;
+      }
+
         File dataFolder = new File("data");
         new Thread(() -> {
             try {
@@ -291,7 +297,7 @@ public class HelloController {
 
             }catch(Exception e){
                     javafx.application.Platform.runLater(() -> {
-                        AlertManager.showAlert("Ошибка", "иди нахуй " + e.getMessage());
+                        AlertManager.showAlert("Ошибка", "Позравляю твой токен недествителен иди нахуй теперь и не открывай больше идею");
                     });
                 }
         }).start();
