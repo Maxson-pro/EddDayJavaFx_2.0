@@ -7,12 +7,6 @@
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.edddayjavafx2.HelloController">
     <children>
         <StackPane fx:id="calendarContainer" layoutX="50.0" layoutY="30.0" prefHeight="300.0" prefWidth="500.0" />
-
-        <Button layoutX="200.0" layoutY="345.0" onAction="#today" prefHeight="35.0" prefWidth="100.0" text="Сегодня">
-            <font>
-                <Font name="Arial Black" size="14.0" />
-            </font>
-        </Button>
-        <Button layoutX="320.0" layoutY="345.0" onAction="#backToMain" prefHeight="35.0" prefWidth="100.0" text="Назад" />
+        <Button layoutX="320.0" layoutY="345.0" onAction="#backToMainList" prefHeight="35.0" prefWidth="100.0" text="Назад" />
     </children>
 </AnchorPane>

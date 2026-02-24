@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -7,32 +6,22 @@
 <?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.edddayjavafx2.HelloController">
-<children>
-    <Text layoutX="166.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Введи дату которою хочешь найти!" textAlignment="CENTER" wrappingWidth="267.13671875">
-        <font>
-            <Font name="Arial Black" size="21.0" />
-        </font>
-    </Text>
-    <TextField fx:id="addText" layoutX="167.0" layoutY="137.0" prefHeight="47.0" prefWidth="267.0" />
-    <Text fill="#d00d0d" layoutX="204.0" layoutY="122.0" strokeType="OUTSIDE" strokeWidth="0.0" text="пример 2025-12-12" wrappingWidth="190.13671875">
-        <font>
-            <Font name="Arial Black" size="17.0" />
-        </font>
-    </Text>
-    <Button fx:id="back" layoutX="167.0" layoutY="243.0" mnemonicParsing="false" onAction="#Back" prefHeight="66.0" prefWidth="92.0" text="НАЗАД">
-        <font>
-            <Font name="Arial Black" size="17.0" />
-        </font>
-    </Button>
-    <Button fx:id="search" layoutX="341.0" layoutY="243.0" mnemonicParsing="false" onAction="#Search" prefHeight="66.0" prefWidth="92.0" text="ИСКАТЬ" textFill="#336fff">
-        <font>
-            <Font name="Arial Black" size="13.0" />
-        </font>
-    </Button>
-      <Button fx:id="searchtext" layoutX="508.0" layoutY="334.0" mnemonicParsing="false" onAction="#SearchText" prefHeight="66.0" prefWidth="92.0" text="Искать текст" textFill="#005b90">
-         <font>
-            <Font name="Arial Black" size="9.0" />
-         </font>
-      </Button>
-</children>
+    <children>
+        <Text layoutX="166.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Введи дату!" textAlignment="CENTER" wrappingWidth="267.13671875">
+            <font><Font name="Arial Black" size="21.0" /></font>
+        </Text>
+        <TextField fx:id="searchField" layoutX="167.0" layoutY="137.0" prefHeight="47.0" prefWidth="267.0" />
+        <Text fill="#d00d0d" layoutX="204.0" layoutY="122.0" text="пример 2025-12-12">
+            <font><Font name="Arial Black" size="17.0" /></font>
+        </Text>
+        <Button layoutX="167.0" layoutY="243.0" mnemonicParsing="false" onAction="#goBack" prefHeight="66.0" prefWidth="92.0" text="НАЗАД">
+            <font><Font name="Arial Black" size="17.0" /></font>
+        </Button>
+        <Button layoutX="341.0" layoutY="243.0" mnemonicParsing="false" onAction="#searchByDate" prefHeight="66.0" prefWidth="92.0" text="ИСКАТЬ" textFill="#336fff">
+            <font><Font name="Arial Black" size="13.0" /></font>
+        </Button>
+        <Button layoutX="508.0" layoutY="334.0" mnemonicParsing="false" onAction="#showSearchText" prefHeight="66.0" prefWidth="92.0" text="Искать текст" textFill="#005b90">
+            <font><Font name="Arial Black" size="9.0" /></font>
+        </Button>
+    </children>
 </AnchorPane>
